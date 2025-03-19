@@ -15,14 +15,13 @@
     <input type="text" id="domainInput" placeholder="example.com">
     <button onclick="checkDomain()">Check</button>
     <p id="result"></p>
-
-    <script>
-        async function checkDomain() {
-            let domain = document.getElementById("domainInput").value;
-            let response = await fetch(`https://your-api-url.com/check?domain=${domain}`);
-            let result = await response.json();
-            document.getElementById("result").innerHTML = result.message;
-        }
-    </script>
+<script>
+    async function checkDomain() {
+        let domain = document.getElementById("domainInput").value;
+        let response = await fetch(`https://domain-check-api.onrender.com/check?domain=${domain}`);
+        let result = await response.json();
+        document.getElementById("result").innerHTML = result.message;
+    }
+</script>
 </body>
 </html>
