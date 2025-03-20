@@ -131,25 +131,32 @@
         }
 
         function fetchAISuggestions(domain) {
-            fetch(`https://domain-check-api.onrender.com/ai-suggestions?domain=${domain}`)
-                .then(response => response.json())
-                .then(data => {
-                    let suggestionsDiv = document.getElementById("ai-suggestions");
-                    document.getElementById("ai-loading").style.display = "none"; // Hide loading text
-                    suggestionsDiv.innerHTML = "<h3>Available Alternatives:</h3><ul style='list-style-type: none; padding: 0;'>";
+    fetch(`https://domain-check-api.onrender.com/ai-suggestions?domain=${domain}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("ai-loading").style.display = "none"; // Hide loading text
+            let suggestionsDiv = document.getElementById("ai-suggestions");
 
-                    data.suggestions.forEach(suggestion => {
-                        suggestionsDiv.innerHTML += `<li>${suggestion}</li>`;
-                    });
+            // ✅ Remove numbers & bullet points
+            suggestionsDiv.innerHTML = "<h3>Available Alternatives:</h3>";
 
-                    suggestionsDiv.innerHTML += "</ul>";
-                    document.getElementById("refresh-suggestions").style.display = "block";
-                })
-                .catch(error => {
-                    document.getElementById("ai-loading").style.display = "none";
-                    document.getElementById("ai-suggestions").innerHTML = `<p style="color:red;">Error fetching alternative suggestions.</p>`;
-                });
-        }
+            data.suggestions.forEach(suggestion => {
+                suggestionsDiv.innerHTML += `<p>${suggestion}</p>`;
+            });
+
+            document.getElementById("refresh-suggestions").style.display = "block";
+        })
+        .catch(error => {
+            document.getElementById("ai-loading").style.display = "none";
+            document.getElementById("ai-suggestions").innerHTML = `<p style="color:red;">Error fetching alternative suggestions: ${error.message}</p>`;
+            console.error("Error fetching AI suggestions:", error);
+        });
+}
 
         function refreshSuggestions() {
             let domain = document.getElementById("domainInput").value.trim();
