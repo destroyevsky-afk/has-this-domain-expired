@@ -159,14 +159,23 @@
 }
 
         function refreshSuggestions() {
-            let domain = document.getElementById("domainInput").value.trim();
-            if (!domain) return;
+    let domain = document.getElementById("domainInput").value.trim();
+    if (!domain) return;
 
-            document.getElementById("ai-loading").style.display = "block"; // Show loading text
-            document.getElementById("ai-suggestions").innerHTML = "";
+    // ✅ Disable button temporarily to prevent spam clicking
+    document.getElementById("refresh-suggestions").disabled = true;
 
-            fetchAISuggestions(domain);
-        }
+    document.getElementById("ai-loading").style.display = "block"; // Show loading text
+    document.getElementById("ai-suggestions").innerHTML = "";
+
+    fetchAISuggestions(domain);
+
+    // ✅ Re-enable button after 5 seconds
+    setTimeout(() => {
+        document.getElementById("refresh-suggestions").disabled = false;
+    }, 5000);
+}
+
     </script>
 </body>
 </html>
