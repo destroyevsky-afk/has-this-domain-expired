@@ -99,7 +99,7 @@
                 counter++;
             }, 1500);
 
-            fetch(`https://your-api-url.com/check?domain=${domain}`)
+            fetch(`https://domain-check-api.onrender.com/check?domain=${domain}`)
                 .then(response => response.json())
                 .then(data => {
                     clearInterval(loadingInterval);
@@ -118,7 +118,7 @@
         }
 
         function fetchAISuggestions(domain) {
-            fetch(`https://your-api-url.com/ai-suggestions?domain=${domain}`)
+            fetch(`https://domain-check-api.onrender.com/ai-suggestions?domain=${domain}`)
                 .then(response => response.json())
                 .then(data => {
                     let suggestionsDiv = document.getElementById("ai-suggestions");
