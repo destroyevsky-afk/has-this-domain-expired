@@ -38,6 +38,12 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        #ai-loading {
+            display: none;
+            font-size: 14px;
+            margin-top: 10px;
+            font-style: italic;
+        }
         #ai-suggestions {
             margin-top: 20px;
         }
@@ -66,8 +72,11 @@
     </div>
 
     <div id="result"></div>
+    
+    <div id="ai-loading">🔍 Checking for available alternatives...</div>
     <div id="ai-suggestions"></div>
-    <button id="refresh-suggestions" onclick="refreshSuggestions()">🔄 Refresh Suggestions</button>
+
+    <button id="refresh-suggestions" onclick="refreshSuggestions()">🔄 Refresh Alternatives</button>
 
     <script>
         const loadingMessages = [
@@ -88,6 +97,7 @@
             document.getElementById("result").innerHTML = "";
             document.getElementById("ai-suggestions").innerHTML = "";
             document.getElementById("refresh-suggestions").style.display = "none";
+            document.getElementById("ai-loading").style.display = "none";
 
             let loading = document.getElementById("loading");
             let loadingText = document.getElementById("loading-text");
@@ -108,6 +118,9 @@
                     let resultDiv = document.getElementById("result");
                     resultDiv.innerHTML = `<p><strong>${domain}</strong> is ${data.available ? "<span style='color:green'>AVAILABLE</span>" : "<span style='color:red'>TAKEN</span>"}.</p>`;
 
+                    // Show AI loading text
+                    document.getElementById("ai-loading").style.display = "block";
+
                     fetchAISuggestions(domain);
                 })
                 .catch(error => {
@@ -122,7 +135,8 @@
                 .then(response => response.json())
                 .then(data => {
                     let suggestionsDiv = document.getElementById("ai-suggestions");
-                    suggestionsDiv.innerHTML = "<h3>AI-Generated Alternatives:</h3><ul>";
+                    document.getElementById("ai-loading").style.display = "none"; // Hide loading text
+                    suggestionsDiv.innerHTML = "<h3>Available Alternatives:</h3><ul style='list-style-type: none; padding: 0;'>";
 
                     data.suggestions.forEach(suggestion => {
                         suggestionsDiv.innerHTML += `<li>${suggestion}</li>`;
@@ -132,7 +146,8 @@
                     document.getElementById("refresh-suggestions").style.display = "block";
                 })
                 .catch(error => {
-                    document.getElementById("ai-suggestions").innerHTML = `<p style="color:red;">Error fetching AI suggestions.</p>`;
+                    document.getElementById("ai-loading").style.display = "none";
+                    document.getElementById("ai-suggestions").innerHTML = `<p style="color:red;">Error fetching alternative suggestions.</p>`;
                 });
         }
 
@@ -140,7 +155,8 @@
             let domain = document.getElementById("domainInput").value.trim();
             if (!domain) return;
 
-            document.getElementById("ai-suggestions").innerHTML = "<p>🔄 Refreshing suggestions...</p>";
+            document.getElementById("ai-loading").style.display = "block"; // Show loading text
+            document.getElementById("ai-suggestions").innerHTML = "";
 
             fetchAISuggestions(domain);
         }
